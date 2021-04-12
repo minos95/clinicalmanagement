@@ -1,0 +1,46 @@
+body{background-color: #fff;}
+
+
+
+.cont-background{
+    
+    background-image: url('../images/background1.jpeg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 100% 100%, auto;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+  
+    /* Preserve aspet ratio */
+    min-width: 100%;
+    min-height: 100%;
+
+}
+.anime{
+    text-align: center;
+    
+}
+.form-login{
+    
+    background-color: rgba(255, 255, 255, 0.74);
+    box-shadow: 5px 5px 5px rgb(196, 195, 195);
+    
+}
+
+
+
+
+
+
+/******animation-text******/
+.ml2 {
+    font-weight: 900;
+    font-size: 3.5em;
+    color: #276678;
+  }
+  
+  .ml2 .letter {
+    display: inline-block;
+    line-height: 1em;
+  }

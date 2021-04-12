@@ -1,0 +1,339 @@
+{% extends 'base.html' %}
+{%block title%}
+Information du patient
+{%endblock%}
+{% block content%}
+{%if  'print' in request.args  %}
+<script>javascript:window.print()</script>
+
+{%endif%}
+{%if not  'print' in request.args  %}
+<div style="background-color: rgb(241, 248, 247); border-style: solid; border-color: rgb(241, 248, 247) ;">
+<div class="container mt-5 p-4" style="box-shadow:5px 5px 5px 5px rgb(196, 195, 195); background-color: white;">
+  {%endif%}
+   <div class="container">
+    
+      <div class="d-flex justify-content-between ">
+        <div class="d-flex flex-row my-4">
+          {%if not 'print' in request.args  %}
+          <img src="../static/images/Molecular DNA.gif" class="mx-4"/>
+          {% endif %}
+          <h3 class="d-flex justify-content-between align-items-center"><strong>Information du patient</strong> </h3>
+         
+        </div>
+        
+         {%if not 'print' in request.args  %}
+          <div class="d-flex justify-content-between align-items-center">
+            <a class=" btn btn-info btn-sm d-flex justify-content-center align-content-between pt-2 mx-2 " target="_blank" href="{{url_for('patientShow',patient=patient.id,print='')}}">
+              <i class="material-icons mr-1">print</i>
+              <span>
+                Imprimer
+              </span>
+            </a>
+              <a class=" btn btn-info btn-sm d-flex justify-content-center align-content-between pt-2 mx-2 "  href="{{url_for('patientShow',patient=patient.id,action=exit_patient)}}">
+                <i class="material-icons mr-1"> exit_to_app</i>
+                <span>
+                  Sortie
+                </span></a>
+              <Button class=" btn btn-danger btn-sm d-flex justify-content-center align-content-between pt-2 " data-toggle="modal" data-target="#Modal" onclick="deleteButtonClicked({{ patient.id}},'{{ patient.lastname }}','patient')">
+                <i class="material-icons mr-1">delete</i>
+                <span>
+                  Supprimer
+                </span></Button>
+          
+          </div>
+        {% endif%}
+      </div>
+      <div class="container ">
+      <ul class="list-group mt-4 list-group-flush">
+         <li class="list-group-item d-flex justify-content-between align-items-center">
+            <h6><strong >Nom</strong></h6> <h6>{{patient.firstname}}</h6>
+         </li>
+         <li class="list-group-item d-flex justify-content-between align-items-center">
+            <h6><strong >Prenom</strong></h6> <h6>{{patient.lastname}}</h6>
+         </li>
+         <li class="list-group-item d-flex justify-content-between align-items-center">
+            <h6><strong >Age</strong></h6> <h6>{{patient.age}}</h6>
+         </li>
+         <li class="list-group-item d-flex justify-content-between align-items-center">
+            <h6><strong >Address</strong></h6> <h6>{{patient.address}}</h6>
+         </li>
+         <li class="list-group-item d-flex justify-content-between align-items-center">
+            <h6><strong >Numero de telephone</strong></h6> <h6>{{patient.phone}}</h6>
+         </li>
+         <li class="list-group-item d-flex justify-content-between align-items-center">
+            <h6><strong >Numero Carte chiffa</strong></h6> <h6>{{patient.chiffanbr}}</h6>
+         </li>
+         <li class="list-group-item d-flex justify-content-between align-items-center">
+            <h6><strong >Numero carte nationale</strong></h6> <h6>{{patient.chiffanbr}}</h6>
+         </li>
+         <li class="list-group-item d-flex justify-content-between align-items-center">
+            <h6><strong >Date d'entrer</strong></h6> <h6>{%if not patient.entrydate%}
+               la date n'est pas specifie
+            {%else %}
+            {{patient.entrydate}} 
+            {%endif%}</h6>
+         </li>
+         <li class="list-group-item d-flex justify-content-between align-items-center">
+            <h6><strong >Date de sortie</strong></h6> <h6>{%if not patient.exitdate%}
+               la date n'est pas specifie
+            {%else %}
+            {{patient.exitdate}} 
+            {%endif%}</h6>
+         </li>
+       </ul>
+      </div>
+   
+       
+      
+   </div>
+   <div class="container mt-5">
+      <div class="d-flex justify-content-between"><h3>
+         <strong>Interventions chirurgicales</strong> </h3>
+         {%if not 'print' in request.args  %}
+         <a class=" btn btn-warning btn-sm d-flex justify-content-center align-content-between pt-2 "  type="submit" href="{{url_for('register_surgery',patient=patient.id)}}"">
+          <i class="material-icons mr-1">add</i>
+          <span>
+            Ajouter
+          </span></a>
+         
+         {%endif%}
+      </div>  
+        
+        
+        {% for  i in patient.surgeries %}
+      <div class="card mt-4">
+         
+         <h4 class="card-header"><div class="d-flex justify-content-between">Intervention {{loop.index}}
+          {%if not 'print' in request.args  %}
+          <a class=" btn btn-danger btn-sm d-flex justify-content-center align-content-between pb-0 "  data-toggle="modal" data-target="#Modal"
+          onclick="deleteButtonClicked({{ patient.id}},'{{ i.name }}','surgery',{{ i.id}})">
+            <i class="material-icons mr-1">delete</i>
+            <span>
+              Supprimer
+            </span></a>
+            
+          {% endif%}
+            
+          <!--  <a class="btn btn-danger pb-0 btn-sm material-icons " href="{{url_for('patientShow',patient=patient.id,action='delete_surgery',surgery=i.id)}}">
+               delete
+             </a> -->
+         </div></h4>
+       
+        
+         <div class="card-body">
+           <div class="row">
+              <div class="col-sm">
+                <h5 class="card-title">Type </h5>
+                <p class="card-text">Operateur</p>
+                <p class="card-text">Anesthesiste</p>
+                <p class="card-text">Date de l'intervention</p>
+              </div>
+              
+              <div class="col-sm">
+                <h5 class="card-title">{{i.name}}</h5>
+                <p>{{i.doctor}}</p>
+                <p>{{i.anesthesist}}</p>
+                <p>{{i.date}}</p>
+               
+               
+                
+              </div>
+              <div class="col-sm">
+                {%if not 'print' in request.args  %}
+                <Button class="btn btn-info btn-sm"  data-toggle="modal" data-target="#exampleModal" 
+                onclick="modalButtonClicked('{{i.id}}','CONSENTEMENT','consent','{{patient.lastname}}','{{patient.firstname}}','{{i.doctor}}')">Consentement</Button>
+                {%endif%}
+              </div>
+           </div>
+          
+         </div>
+         <footer class="blockquote-footer">date d'ajoute <cite title="Source Title">{{i.date_added.year }}-{{i.date_added.month }}-{{i.date_added.day }}</cite></footer>
+      </div>
+         {% else%}
+           Ce patient n'a aucune itervention
+        {% endfor %}
+   </div>
+   <div class="container mt-5">
+      <div class="d-flex justify-content-between">
+         <h3><strong>bilans</strong> </h3>
+         {%if not 'print' in request.args  %}
+         <a class=" btn btn-warning btn-sm d-flex justify-content-center align-content-between pt-2 "  type="submit"href="{{url_for('register_checkup',patient=patient.id)}}"">
+          <i class="material-icons mr-1">add</i>
+          <span>
+            Ajouter
+          </span></a>
+     
+          {%endif%}
+            
+      </div>
+   {% for i in patient.checkups%}
+   <div class="card mt-4">
+      <h4 class="card-header">
+         <div class="d-flex justify-content-between">
+         Bilan {{loop.index}}
+         {%if not 'print' in request.args  %}
+         
+          <a class=" btn btn-danger btn-sm d-flex justify-content-center align-content-between pb-0 " data-toggle="modal" data-target="#Modal"
+          onclick="deleteButtonClicked({{ patient.id}},'{{ i.name }}','checkup',{{i.id}})">
+            <i class="material-icons mr-1">delete</i>
+            <span>
+              Supprimer
+            </span></a>
+          {%endif%}
+        
+         <!--<a class="btn btn-danger pb-0 btn-sm material-icons " href="{{url_for('patientShow',patient=patient.id,action='delete_checkup',checkup=i.id)}}">
+         delete
+       </a>-->
+      </div>
+   </h4>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm">
+            <h5 class="card-title">Type du bilan</h5>
+          </div>
+          <div class="col-sm">
+            <h5 class="card-title"> {{i.name}}</h5>
+          </div>
+          <div class="col-sm"> 
+            {%if not 'print' in request.args  %}
+            <a type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal" onclick="modalButtonClicked('{{ i.path }}','{{ i.name}}','bilan')" >
+            Voire le bilan
+            </a>
+            {% endif%}
+      </div>
+        </div>
+        
+       
+       
+       <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel" ></h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body" id="image-modal">
+               
+               
+
+             </div>
+             <div class="modal-footer" id="button">
+               
+             </div>
+           </div>
+         </div>
+       </div>
+      
+      </div>
+      <footer class="blockquote-footer pt-2">date d'ajoute <cite title="Source Title">{{i.date_added.year }}-{{i.date_added.month }}-{{i.date_added.day }}</cite></footer>
+   </div>
+      
+     
+      {% else%}
+         Ce patient n'a aucun billan
+   {% endfor%}
+   </div>
+   
+   
+   
+      
+
+
+   {%if  'print' in request.args  %}  </div>
+{%endif%}
+</div>
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Attention !</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="alert-modal">
+        
+        
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+        <form id="deleteForm" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          <input type="submit" value="Yes" class="btn btn-danger" >
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function deleteButtonClicked(issMapId, issMapName,type,id) {
+    if(type=='patient'){
+      document.getElementById("alert-modal").innerHTML = "Ete vous sure de bien vouloire supprimer le patient " + issMapName ;
+      var element = document.getElementById("deleteForm");
+      element.setAttribute("action",  "patientShow?patient="+issMapId+"&&action=delete_patient" )
+    }else if(type=='surgery'){
+      document.getElementById("alert-modal").innerHTML = "Ete vous sure de bien vouloire supprimer  l'intervention " + issMapName ;
+      var element = document.getElementById("deleteForm");
+      element.setAttribute("action",  "patientShow?patient="+issMapId+"&&action=delete_surgery&&surgery="+id )
+    }else if(type=="checkup"){
+      document.getElementById("alert-modal").innerHTML = "Ete vous sure de bien vouloire supprimer le bilan " + issMapName ;
+      var element = document.getElementById("deleteForm");
+      element.setAttribute("action",  "patientShow?patient="+issMapId+"&&action=delete_checkup&&checkup="+id )
+    }
+     
+      
+  }
+  function modalButtonClicked(issMapId, issMapName,type,patientLastname,patientFirstname,operator) {
+    
+    document.getElementById("exampleModalLabel").innerHTML = issMapName ;
+      if(type=='bilan'){
+      document.getElementById("image-modal").innerHTML = '<img src="../static/uploads/'+ issMapId +'" alt="Girl in a jacket" style="max-width: 100%; height: auto;">' ;
+      //var element = document.getElementById("deleteForm");
+      //element.setAttribute("action",  "patientShow?patient="+issMapId+"&&action=delete_checkup&&checkup="+id )
+      document.getElementById("button").innerHTML = '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> <a  type="button" class="btn btn-primary" href="../static/uploads/'+ issMapId +'" download>Download</a>'
+    }else if(type=='consent'){
+      document.getElementById("image-modal").innerHTML ="<div class='container my-5' style='padding:50px'  >Je Soussigné(e):Nom: "+patientLastname+" Prénom: "+patientFirstname+
+      "</br> Attesté par le présente que le Docteur "+operator+
+      " M'a delevré des information claires concernant le Diagnostic de ma maladie et l'intervention Chirugicale , acte ou examen qu'il me recommande. </br> j'été informé (e) </br>"+
+      "-Des bénéfices attendus de cette intervention chirurgicale pour ma santé et des alternatives thérapeutiques. </br>"+
+      "-Des Risque de cette intervention en tenant compte:</br>  -d'un certain pourcentage de complication et de risque, y compris viraux , liés à ma maldie ou à des réactions individuelles imprèvisibles. </br>"+
+      "-Des risques particuliers liés a l'intervention proposèe pour laquelle je peux à ma demande recevoir une note d'information spéfique si elle est diponible. </br> "+
+      "-J'ai également été prévenu (e) qu'au cours de l'intervention , le praticien peut devoir faire face a un événement imprévu imposant des gestes différent de ceux initialement programmés et j'autorise dans ces conditions, la praticien à effectuer tout acte qu'il estimerait indispensable "+
+      "conformément aux connaissances médicales actuelles. </br>"+
+      "-Je reconnais avoir pu poser toutes les questions concernant cette intervention ou acte et avoir compris les explications données en réponse."+
+      "J'accepte de subir les examens , les explorations et les prélèvements (sang,divers) nécessaires au diagnostic et à ma prisee en charge .j'accepte de subir un dépistage HIV si cela est jugé par mes médecins: OUI ou NON.</br>"+
+      "Je m'engage àsuivre les traitements médicamenteux ( par voie orale ou voie injectable) qui me seront prescrits.</br>"+
+      "Je m'engage à me rendre aux consultations et me soumettre aux soins prescrits en pré et postopératoires . </br>"+
+      "Je déclare avoir recus une copie du présent consentement. </br></br></br>"+
+      "<div class='row'> <div class='col-ms-6'>Signature précédée de la mention: j'ai été informé(e) et consens(n° CDN)   </div><div class='col'>  A/...............le/...............</div>                    </div><div>";
+      document.getElementById("button").innerHTML = '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>  <Button  type="button" class="btn btn-primary" onclick="PrintElem(\'image-modal\')" />Imprimer</button>';
+    }
+               
+     
+    
+  }
+  function PrintElem(elem)
+{
+    var mywindow = window.open('', 'PRINT', 'height=700,width=900');
+
+    mywindow.document.write('<html><head><title>Consentement</title>');
+    mywindow.document.write('</head><body >');
+    mywindow.document.write('<h1 style="padding:50px">Consentement</h1> ');
+    mywindow.document.write(document.getElementById(elem).innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    mywindow.print();
+    mywindow.close();
+
+    return true;
+}
+</script>
+{% endblock%}

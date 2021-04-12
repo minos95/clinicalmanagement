@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{%block title%}
+dashboard
+{%endblock%}
+{% block content%}
+
+<div class="container">
+    <div class="row pt-5 mt-5">
+        <div class="col">
+            <div style="background-color:#007580 ; padding: 10%;">
+                <h6 style="color:whitesmoke ; text-align: center;"> <strong>
+                    Nombre des Patients d'aujord'hui </br>
+                    {{todayPatient}}
+                </strong> 
+                </h6>
+            
+            </div>
+         </div>
+         <div class="col">
+             <div style="background-color:#fed049 ; padding: 10%;text-align: center;">
+                <h6 > <strong>Nombre des patients de ce mois
+                </br>
+            
+                    {{mounthPatients}}
+                </strong> 
+                </h6>
+                
+            </div>
+            
+        </div>
+        <div class="col">
+            <div style="background-color:#282846; padding: 10%;text-align: center;">
+                <h6 style="color:whitesmoke"> <strong>
+                    Nombre totale des patients </br></br>
+                    {{totalpatients}}
+                    </strong> 
+                </h6>
+        
+            </div>
+            
+        </div>
+        
+        <div class="col" >
+            <div style="background-color:#d8ebe4; padding: 10%; text-align: center;">
+            <h6 > <strong>
+                Nombre des patients en hospitalisation</br>
+                {{hospitalized}}
+                </strong> 
+            </h6>
+        </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        
+            <div class="col">
+                <h4><strong> Nouveau patients</strong></h4>
+                <table class="table ">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prenom</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for patient in patients%}
+                    <tr>
+                        <th style="max-width: 25px;"><img style="width:100%;" class="img" data-formatter="imageFormatter" src="../static/images/Heart-beat.gif" /></th>
+                        <td>{{patient.lastname}}</td>
+                        <td>{{patient.firstname}}</td>
+                        <td>{{patient.age}}</td>
+                        <td><a class="btn btn-primary py-0" href="{{url_for('patientShow',patient=patient.id)}}" role="button">Detail</a> </td>
+                    </tr>
+                   {%endfor%}
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="col">
+                <canvas id="myChart" >
+
+                </canvas>
+            </div>
+        
+       
+
+    </div>
+</div>
+
+<script type="text/javascript">
+ 
+const data = {
+  labels: {{ labels | safe}},
+  
+  datasets: [{
+    
+    barPercentage:03,
+    maxBarThickness: 30,
+    label: 'Le nombre des interventions',
+    backgroundColor: '#007580',
+    borderColor: 'rgb(255, 99, 132)',
+
+    data: {{ values | safe}},
+  }]
+};
+    var ctx =document.getElementById("myChart");
+    var lineChart=new Chart(ctx,{
+        type:"bar",
+        options: {
+    scales: {
+      y: {
+       
+      }
+    }
+  },
+        data:data
+    })
+</script>
+{% endblock%}

@@ -1,0 +1,131 @@
+{% block test%}
+
+{% endblock %}
+
+<div class="container mt-5">
+  
+  <div class="d-flex justify-content-between my-5" >
+  <div class="w-75 ">
+  <form method="GET" action="{{url_for('patients_page')}}">
+    
+      <div class="row ">
+        <div class="col">
+          <input type="hidden" id="custId" name="page_num" value="1">
+          <input class="form-control   " name="search"  type="search" placeholder="Le nom ou la carte nationale">
+        </div>
+        <div class="col">
+          <button class="btn btn-primary" type="submit">Rechercher</button>
+          <a class="btn btn-outline-primary material-icons " href="{{url_for('patients_page',page_num=1)}}">
+            autorenew
+            </a>
+        </div>
+        
+      </div>
+    
+  </form>
+</div>
+    
+
+  <a class=" btn btn-warning d-flex justify-content-center align-content-between" type="submit" href="{{url_for('register_page')}}">
+    <i class="material-icons mr-1">add</i>
+    <span>
+      Ajouter
+    </span></a>
+
+</div>
+</div>
+
+<table class="table table-striped table-light">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nom</th>
+        <th scope="col">Prenom</th>
+        <th scope="col">Age</th>
+        <th scope="col">Adresse</th>
+        <th scope="col">Carte d'identité N°</th>
+        <th scope="col">Carte chiffa N°</th>
+        <th scope="col">Entré le</th>
+        <th scope="col">Sortie le</th>
+        <th scope="col">Detail</th>
+        
+
+      </tr>
+    </thead>
+    <tbody>
+      
+      {% for patient in patients.items%}
+      <tr>
+        <th  style="max-width: 70px;" ><img style="width:100%;"  src="../static/images/Heart-beat.gif" /></th>
+        <td>{{patient.lastname}}</td>
+        <td>{{patient.firstname}}</td>
+        <td>{{patient.age}}</td>
+        <td>{{patient.address}} </td>
+        <td>{{patient.identitynbr}}</td>
+        <td>{{patient.chiffanbr}}</td>
+        <td>{{patient.entrydate}}</td>
+        <td>{{patient.exitdate}}</td>
+        
+        <td>
+                <a class="btn btn-primary py-0" href="{{url_for('patientShow',patient=patient.id)}}" role="button">Detail</a>
+              
+                <button class="btn btn-danger btn-info py-0" data-toggle="modal" data-target="#delete_patient"  onclick="deleteButtonClicked({{ patient.id}},'{{ patient.lastname }}')">Supprimer</button>
+        </td>
+      </tr>
+      
+      {% endfor%}
+      
+    </tbody>
+  </table>
+
+  <nav  aria-label="...">
+    <ul class="pagination">
+      <li class="page-item {%if not patients.has_prev%} disabled {% endif %}" >
+        <a class="page-link" href="{{url_for('patients_page',page_num=patients.prev_num)}}">Previous</a>
+      </li>
+      {%for page in patients.iter_pages()%}
+      {% if page %}
+      <li class="page-item"><a class="page-link" href="{{url_for('patients_page',page_num=page)}}">{{page}}</a></li>
+      {%else%}
+      <li class="page-item active"><a class="page-link" href=""><span class="sr-only">(current)</span></a></li>
+      {%endif%}
+      {%endfor%}
+     
+      <li class="page-item {%if not patients.has_next%} disabled {% endif %}">
+        <a class="page-link" href="{{url_for('patients_page',page_num=patients.next_num)}}">Next</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+<div class="modal fade" id="delete_patient" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Attention !</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="alert-modal">
+        
+        
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+        <form id="deleteForm" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          <input type="submit" value="Yes" class="btn btn-danger" >
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function deleteButtonClicked(issMapId, issMapName) {
+      document.getElementById("alert-modal").innerHTML = "Ete vous sure de bien vouloire supprimer  " + issMapName ;
+      var element = document.getElementById("deleteForm");
+      element.setAttribute("action",  "patientShow?patient="+issMapId+"&&action=delete_patient" )
+  }
+</script>

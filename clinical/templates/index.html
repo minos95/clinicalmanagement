@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{%block title%}
+Index
+{%endblock%}
+{% block content%}
+<div class=" cont-background">
+    <div class="row mt-5">
+      <div class="container form-login col p-5 w-75" >
+      
+        
+          
+        <form method="POST"  class="form-register" >
+            {{ form.hidden_tag() }}
+            <h1 class="h3 mb-3 font-weight-normal"> Se connecter</h1>
+            <br>
+            
+            {{form.username.label()}}
+            {{form.username(class="form-control",placeholder="Username")}}
+            {{form.password.label()}}
+            {{form.password(class="form-control",placeholder="Mot de passe")}}
+          
+            
+            <br>
+            
+            {{form.submit(class="btn  btn-block btn-primary")}}
+        </form>
+      
+      </div>
+      <div class="container anime col-8">
+        <img src="../static/images/yourlogo2.png" style="max-width: 200px;max-height: 200px;"/>
+        <h1 class="ml2">CLINIQUE BENHABIB</h1>
+      </div>
+      
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+<script src="{{url_for('static',filename='styles/animation.js')}}"></script>
+
+{% endblock%}

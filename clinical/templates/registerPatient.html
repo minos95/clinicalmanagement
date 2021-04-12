@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title%}
+    Patient Register
+{% endblock%}
+
+{% block content%}
+{% if form.errors!={}:%}
+<div class="alert alert-danger" role="alert" >
+    Verifie
+    {% for err in form.errors%}
+            {{err}} ,
+    {% endfor %}
+  </div>
+{% endif%}
+<div class="container-sm mt-5">
+    <div class="d-flex flex-row my-4 justify-content-center">
+            
+        <img style="max-width: 50px;" src="../static/images/Molecular DNA.gif"/>
+            <h1 class="h3 mb-3 font-weight-normal mx-2 align-self-end">Enregistrer un patient   </h1>
+            
+       
+    </div>
+    
+    <form method="POST" class="form-register p-5" style="background-color: rgb(241, 248, 247); ">
+        {{ form.hidden_tag() }}
+        
+        
+        
+        
+        <div class="row my-3">
+            <div class="col">
+                {{form.lastname.label()}}
+                {{form.lastname(class="form-control",placeholder="Le nom du patient",style="text-transform: capitalize;" )}}
+            </div>
+            <div class="col">
+                {{form.firstname.label()}}
+                {{form.firstname(class="form-control",placeholder="Le prenom du patient",style="text-transform: capitalize;" )}}
+            </div>
+        </div>
+     
+    
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                {{form.age.label()}}
+                {{form.age(class="form-control",placeholder="L'age du patient")}}
+            </div>
+            <div class="col">
+                {{form.address.label()}}
+                {{form.address(class="form-control",placeholder="L'address du patient")}}
+            </div>
+        </div>
+        
+        
+        <div class="row my-3">
+            <div class="col">
+                {{form.identity.label()}}
+                {{form.identity(class="form-control",placeholder="La carte d'idetite du patient")}}
+            </div>
+            <div class="col">
+                {{form.phone.label()}}
+                {{form.phone(class="form-control",placeholder="L'address du patient")}}
+            </div>
+            
+        </div>
+        
+
+
+ 
+        
+        {{form.chiffa.label()}}
+        {{form.chiffa(class="form-control",placeholder="La carte chiffa du patient")}}
+        <div class="my-5 w-25">
+        {{form.entrydate.label()}}
+        {{form.entrydate(class="form-control",placeholder=" jour/mois/année")}}
+        
+        {{form.exitdate.label()}}
+        {{form.exitdate(class="form-control",placeholder="jour/mois/année")}}
+         </div>
+        <br>
+        
+        {{form.submit(class="btn  btn-block btn-primary")}}
+    </form>
+
+</div>
+
+{% endblock %}

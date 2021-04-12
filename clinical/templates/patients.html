@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{%block title%}
+patients
+{%endblock%}
+{% block content%}
+<div class="container">
+{%with patients=patients%}
+{% include 'listPatient.html' %}
+{% endwith%}
+</div>
+{% endblock%}

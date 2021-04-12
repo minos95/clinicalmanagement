@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title%}
+    Patient Register
+{% endblock%}
+
+{% block content%}
+{% if form.errors!={}:%}
+<div class="alert alert-danger" role="alert" >
+    Verifie
+    {% for err in form.errors%}
+            {{err}} ,
+    {% endfor %}
+  </div>
+{% endif%}
+<div class="container">
+    
+    <form method="POST" enctype="multipart/form-data" class="form-register" >
+        {{ form.hidden_tag() }}
+        <h1 class="h3 mb-3 font-weight-normal">Enregistrer le bilan</h1>
+        <br>
+        
+        {{form.name.label()}}
+        {{form.name(class="form-control",placeholder="Le type du bilant",style="text-transform: capitalize;" )}}
+        {{form.file.label()}}
+        {{form.file(class="form-control",placeholder="Le type du bilant")}}
+       
+        
+        <br>
+        
+        {{form.submit(class="btn  btn-block btn-primary")}}
+    </form>
+
+</div>
+
+{% endblock %}
