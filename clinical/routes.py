@@ -2,13 +2,9 @@ import os
 import datetime
 
 from clinical import app,db
-from flask import render_template ,redirect, url_for,request,flash
+from flask import render_template ,redirect, url_for,request,flash,jsonify
 from clinical.models import Patient ,Surgery,Checkup,Admin
-from clinical.formPatient import RegisterForm
-from clinical.formSurgery import SurgeryForm
-from clinical.formCheckup import CheckupForm
-from clinical.formLogin import LoginsForm
-from clinical.formDoctor import DoctorForm
+from clinical.forms import RegisterForm,SurgeryForm,CheckupForm,LoginsForm,UpdateExite
 from werkzeug.utils import secure_filename
 from flask_login import login_user,logout_user,login_required
 from sqlalchemy import or_,desc ,extract,and_ ,func
@@ -23,9 +19,9 @@ def index():
         attempted_user=Admin.query.filter(Admin.username==form.username.data).first()
         print(attempted_user)
         #print(attempted_user.id)
-        
-        
-        
+
+
+
         if attempted_user and form.password.data=='admin' :
             print('login')
             login_user(attempted_user)
@@ -61,12 +57,20 @@ def patients_page():
         patients=Patient.query.order_by(desc(Patient.id)).filter(or_(Patient.lastname == request.args.get("search"), Patient.identitynbr == request.args.get("search"))).paginate(per_page=20,page=int(request.args.get("page_num")),error_out=True)
     else:
         patients=Patient.query.order_by(desc(Patient.id)).paginate(per_page=20,page=int(request.args.get("page_num")),error_out=True)
-    
+
     return render_template('patients.html',patients=patients)
 
 @app.route('/patientShow',methods=['GET','POST'])
 def patientShow():
     id=request.args.get("patient")
+    form=UpdateExite()
+    if form.validate_on_submit():
+        print('submit')
+        patient=Patient.query.filter(Patient.id==id).first()
+        print(patient)
+        patient.exitdate=form.exitDate.data
+        db.session.commit()
+        
     print(id)
     patient=Patient.query.filter_by(id=id).first()
     if request.args.get("action") and request.args.get("action")=="delete_surgery":
@@ -88,18 +92,18 @@ def patientShow():
         return redirect(url_for('patients_page',page_num=1))
     if request.args.get("action") and request.args.get("action")=="exit_patient":
         patient=Patient.query.filter_by(id=id).first()
-        
+
         patient.exitdate=datetime.datetime.now()
         session.commit()
         return redirect(url_for('patientShow',patient=id))
-    
-    return render_template('patientShow.html',patient=patient)
+
+    return render_template('patientShow.html',patient=patient,form=form)
 
 @app.route('/registerPatient',methods=['GET','POST'])
 def register_page():
     form=RegisterForm()
     if form.validate_on_submit():
-       
+        
         patient_to_create=Patient(firstname=form.firstname.data,
                                   lastname=form.lastname.data,
                                   age=form.age.data,
@@ -123,14 +127,14 @@ def register_page():
 def register_surgery():
     form=SurgeryForm()
     id=request.args.get("patient")
-    
+
     if form.validate_on_submit():
         surgery_to_create=Surgery(name=form.name.data,
                                 doctor=form.doctor.data,
                                 anesthesist=form.anesthesist.data,
                                 date=form.date.data,
                                 patient=id)
-                                
+
         db.session.add(surgery_to_create)
         db.session.commit()
 
@@ -147,11 +151,16 @@ def register_checkup():
     form=CheckupForm()
     id=request.args.get("patient")
     if form.validate_on_submit():
-        filename = secure_filename(form.file.data.filename)
-        form.file.data.save('clinical/static/uploads/' + filename)
-        checkup_to_create=Checkup(name=form.name.data,
-                                path=filename,
-                                patient=id)
+        if form.file.data.filename is not None :
+            filename = secure_filename(form.file.data.filename)
+            form.file.data.save('clinical/static/uploads/' + filename)
+            checkup_to_create=Checkup(name=form.name.data,
+                                    path=filename,
+                                    patient=id)
+           
+        else :
+            checkup_to_create=Checkup(name=form.name.data,
+                                    patient=id)
         db.session.add(checkup_to_create)
         db.session.commit()
         return redirect(url_for('patientShow',patient=id))
@@ -160,3 +169,11 @@ def register_checkup():
 def logout_page():
     logout_user()
     return redirect(url_for('index'))
+@app.route('/autocomplete',methods=['GET'])
+def autocomplete():
+    print('autocomplete')
+    print(request.args.get('q'))
+    search = request.args.get('q')
+    query = db.session.query(Surgery.name).filter(Surgery.name.like('%' + 'prostate' + '%')).all()
+    results = [mv[0] for mv in query]
+    return jsonify(matching_results=results)

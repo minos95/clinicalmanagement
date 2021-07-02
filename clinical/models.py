@@ -38,6 +38,15 @@ class Patient(db.Model):
     checkups=db.relationship('Checkup',backref='patient_checkup',cascade="all,delete",lazy=True)
     #def __repr__(self):
     #   return f Patient {self.name}
+class Doctor(db.Model):
+    id=db.Column(db.Integer(),primary_key=True)
+    firstname=db.Column(db.String(length=30),nullable=False)
+    lastname=db.Column(db.String(length=30),nullable=False)
+    email=db.Column(db.String(length=30),nullable=False)
+    phone=db.Column(db.String(length=30),nullable=False)
+    #surgeries=db.relationship('Surgery',backref='doctor_surgery',cascade="all,delete",lazy=True)
+    
+
 class Surgery(db.Model):
     id=db.Column(db.Integer(),primary_key=True)
     name=db.Column(db.String(length=30),nullable=False)
@@ -45,6 +54,7 @@ class Surgery(db.Model):
     anesthesist=db.Column(db.String(length=30),nullable=False)
     date=db.Column(db.Date(),nullable=False)
     patient=db.Column(db.Integer(),db.ForeignKey('patient.id'))
+    #doctor=db.Column(db.Integer(),db.ForeignKey('doctor.id'))
     date_added=db.Column(db.DateTime, default=datetime.datetime.utcnow)
    # def __repr__(self):
    #     return f'Surgery {self.name}'
@@ -55,3 +65,5 @@ class Checkup(db.Model):
     path=db.Column(db.String(length=30),nullable=False)
     patient=db.Column(db.Integer(),db.ForeignKey('patient.id'))
     date_added=db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+

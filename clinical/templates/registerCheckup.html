@@ -12,17 +12,23 @@
     {% endfor %}
   </div>
 {% endif%}
-<div class="container">
+<div class="container mt-5">
+    <div class="d-flex flex-row my-4 justify-content-center">
+            
+        <img style="max-width: 50px;" src="../static/images/Molecular DNA.gif"/>
+            <h1 class="h3 mb-3 font-weight-normal mx-2 align-self-end">Enregistrer un Bilan   </h1>
+            
+       
+    </div>
     
-    <form method="POST" enctype="multipart/form-data" class="form-register" >
+    <form method="POST" enctype="multipart/form-data" class="form-register p-5" style="background-color: rgb(241, 248, 247); " >
         {{ form.hidden_tag() }}
-        <h1 class="h3 mb-3 font-weight-normal">Enregistrer le bilan</h1>
-        <br>
+        
         
         {{form.name.label()}}
-        {{form.name(class="form-control",placeholder="Le type du bilant",style="text-transform: capitalize;" )}}
+        {{form.name(class="form-control mb-3",placeholder="Le type du bilant",style="text-transform: capitalize;" )}}
         {{form.file.label()}}
-        {{form.file(class="form-control",placeholder="Le type du bilant")}}
+        {{form.file(class="form-control mb-3",placeholder="Le type du bilant")}}
        
         
         <br>

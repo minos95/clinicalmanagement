@@ -30,11 +30,11 @@ Information du patient
                 Imprimer
               </span>
             </a>
-              <a class=" btn btn-info btn-sm d-flex justify-content-center align-content-between pt-2 mx-2 "  href="{{url_for('patientShow',patient=patient.id,action=exit_patient)}}">
+              <Button class=" btn btn-info btn-sm d-flex justify-content-center align-content-between pt-2 mx-2 " data-toggle="modal" data-target="#exampleModal" onclick="modalButtonClicked('{{patient.id}}','La date de sortie du patient','updateExit','{{patient.lastname}}','{{patient.firstname}}')">
                 <i class="material-icons mr-1"> exit_to_app</i>
                 <span>
                   Sortie
-                </span></a>
+                </span></Button>
               <Button class=" btn btn-danger btn-sm d-flex justify-content-center align-content-between pt-2 " data-toggle="modal" data-target="#Modal" onclick="deleteButtonClicked({{ patient.id}},'{{ patient.lastname }}','patient')">
                 <i class="material-icons mr-1">delete</i>
                 <span>
@@ -65,7 +65,7 @@ Information du patient
             <h6><strong >Numero Carte chiffa</strong></h6> <h6>{{patient.chiffanbr}}</h6>
          </li>
          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <h6><strong >Numero carte nationale</strong></h6> <h6>{{patient.chiffanbr}}</h6>
+            <h6><strong >Numero carte nationale</strong></h6> <h6>{{patient.identitynbr}}</h6>
          </li>
          <li class="list-group-item d-flex justify-content-between align-items-center">
             <h6><strong >Date d'entrer</strong></h6> <h6>{%if not patient.entrydate%}
@@ -123,14 +123,14 @@ Information du patient
         
          <div class="card-body">
            <div class="row">
-              <div class="col-sm">
+              <div class="col">
                 <h5 class="card-title">Type </h5>
                 <p class="card-text">Operateur</p>
                 <p class="card-text">Anesthesiste</p>
                 <p class="card-text">Date de l'intervention</p>
               </div>
               
-              <div class="col-sm">
+              <div class="col">
                 <h5 class="card-title">{{i.name}}</h5>
                 <p>{{i.doctor}}</p>
                 <p>{{i.anesthesist}}</p>
@@ -142,7 +142,7 @@ Information du patient
               <div class="col-sm">
                 {%if not 'print' in request.args  %}
                 <Button class="btn btn-info btn-sm"  data-toggle="modal" data-target="#exampleModal" 
-                onclick="modalButtonClicked('{{i.id}}','CONSENTEMENT','consent','{{patient.lastname}}','{{patient.firstname}}','{{i.doctor}}')">Consentement</Button>
+                onclick="modalButtonClicked('{{patient.id}}','Consentement','consent','{{patient.lastname}}','{{patient.firstname}}','{{i.doctor}}')">Consentement</Button>
                 {%endif%}
               </div>
            </div>
@@ -175,7 +175,7 @@ Information du patient
          {%if not 'print' in request.args  %}
          
           <a class=" btn btn-danger btn-sm d-flex justify-content-center align-content-between pb-0 " data-toggle="modal" data-target="#Modal"
-          onclick="deleteButtonClicked({{ patient.id}},'{{ i.name }}','checkup',{{i.id}})">
+          onclick="deleteButtonClicked('{{ patient.id}}','{{ i.name }}','checkup','{{i.id}}')">
             <i class="material-icons mr-1">delete</i>
             <span>
               Supprimer
@@ -202,30 +202,8 @@ Information du patient
             </a>
             {% endif%}
       </div>
-        </div>
-        
-       
-       
-       <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-         <div class="modal-dialog" role="document">
-           <div class="modal-content">
-             <div class="modal-header">
-               <h5 class="modal-title" id="exampleModalLabel" ></h5>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                 <span aria-hidden="true">&times;</span>
-               </button>
-             </div>
-             <div class="modal-body" id="image-modal">
-               
-               
-
-             </div>
-             <div class="modal-footer" id="button">
-               
-             </div>
-           </div>
-         </div>
-       </div>
+    </div>
+      
       
       </div>
       <footer class="blockquote-footer pt-2">date d'ajoute <cite title="Source Title">{{i.date_added.year }}-{{i.date_added.month }}-{{i.date_added.day }}</cite></footer>
@@ -270,6 +248,29 @@ Information du patient
   </div>
 </div>
 
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel" ></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="image-modal">
+        
+        
+
+      </div>
+      <div class="modal-footer" id="button">
+        
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
   function deleteButtonClicked(issMapId, issMapName,type,id) {
     if(type=='patient'){
@@ -290,13 +291,13 @@ Information du patient
   }
   function modalButtonClicked(issMapId, issMapName,type,patientLastname,patientFirstname,operator) {
     
-    document.getElementById("exampleModalLabel").innerHTML = issMapName ;
-      if(type=='bilan'){
+    document.getElementById("ModalLabel").innerHTML = issMapName ;
+      if(type==='bilan'){
       document.getElementById("image-modal").innerHTML = '<img src="../static/uploads/'+ issMapId +'" alt="Girl in a jacket" style="max-width: 100%; height: auto;">' ;
       //var element = document.getElementById("deleteForm");
       //element.setAttribute("action",  "patientShow?patient="+issMapId+"&&action=delete_checkup&&checkup="+id )
       document.getElementById("button").innerHTML = '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> <a  type="button" class="btn btn-primary" href="../static/uploads/'+ issMapId +'" download>Download</a>'
-    }else if(type=='consent'){
+    }else if(type==='consent'){
       document.getElementById("image-modal").innerHTML ="<div class='container my-5' style='padding:50px'  >Je Soussigné(e):Nom: "+patientLastname+" Prénom: "+patientFirstname+
       "</br> Attesté par le présente que le Docteur "+operator+
       " M'a delevré des information claires concernant le Diagnostic de ma maladie et l'intervention Chirugicale , acte ou examen qu'il me recommande. </br> j'été informé (e) </br>"+
@@ -307,16 +308,20 @@ Information du patient
       "conformément aux connaissances médicales actuelles. </br>"+
       "-Je reconnais avoir pu poser toutes les questions concernant cette intervention ou acte et avoir compris les explications données en réponse."+
       "J'accepte de subir les examens , les explorations et les prélèvements (sang,divers) nécessaires au diagnostic et à ma prisee en charge .j'accepte de subir un dépistage HIV si cela est jugé par mes médecins: OUI ou NON.</br>"+
-      "Je m'engage àsuivre les traitements médicamenteux ( par voie orale ou voie injectable) qui me seront prescrits.</br>"+
+      "Je m'engage à suivre les traitements médicamenteux ( par voie orale ou voie injectable) qui me seront prescrits.</br>"+
       "Je m'engage à me rendre aux consultations et me soumettre aux soins prescrits en pré et postopératoires . </br>"+
       "Je déclare avoir recus une copie du présent consentement. </br></br></br>"+
       "<div class='row'> <div class='col-ms-6'>Signature précédée de la mention: j'ai été informé(e) et consens(n° CDN)   </div><div class='col'>  A/...............le/...............</div>                    </div><div>";
       document.getElementById("button").innerHTML = '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>  <Button  type="button" class="btn btn-primary" onclick="PrintElem(\'image-modal\')" />Imprimer</button>';
+    }else if(type==='updateExit'){
+      document.getElementById("image-modal").innerHTML ='<form method="POST" class="form-register p-5"  ">{{ form.hidden_tag() }}{{form.exitDate.label()}}{{form.exitDate(class="form-control" )}} </br> <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>  {{form.submit(class="btn  btn-block btn-primary")}} </form>'
+      document.getElementById("button").innerHTML = ' ';
     }
                
      
     
   }
+ 
   function PrintElem(elem)
 {
     var mywindow = window.open('', 'PRINT', 'height=700,width=900');

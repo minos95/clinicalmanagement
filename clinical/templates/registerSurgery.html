@@ -5,23 +5,29 @@
 
 {% block content%}
     
-    <div class="container">
+    <div class="container mt-5">
+        <div class="d-flex flex-row my-4 justify-content-center">
+            
+            <img style="max-width: 50px;" src="../static/images/Molecular DNA.gif"/>
+                <h1 class="h3 mb-3 font-weight-normal mx-2 align-self-end">Enregistrer une Intervention   </h1>
+                
+           
+        </div>
         
-        <form method="POST" class="form-register" >
+        <form method="POST" class="form-register p-5" style="background-color: rgb(241, 248, 247); " >
             {{ form.hidden_tag() }}
-            <h1 class="h3 mb-3 font-weight-normal">Enregistrer une Intervention</h1>
-            <br>
+            
             
             {{form.name.label()}}
-            {{form.name(class="form-control",placeholder="Le type d'intervention",style="text-transform: capitalize;" )}}
+            {{form.name(class="form-control mb-3",placeholder="Le type d'intervention",style="text-transform: capitalize;" ,id='autocomplete',)}}
             
             {{form.doctor.label()}}
-            {{form.doctor(class="form-control",placeholder="Le nom du docteur",style="text-transform: capitalize;" )}}
+            {{form.doctor(class="form-control mb-3",placeholder="Le nom du docteur",style="text-transform: capitalize;" )}}
             
             {{form.anesthesist.label()}}
-            {{form.anesthesist(class="form-control",placeholder="le nom de l'anestesite",style="text-transform: capitalize;" )}}
+            {{form.anesthesist(class="form-control mb-3",placeholder="le nom de l'anestesite",style="text-transform: capitalize;" )}}
             {{form.date.label()}}
-            {{form.date(class="form-control",placeholder="ex:01/24/2022")}}
+            {{form.date(class="form-control mb-3",placeholder="ex:jour/mois/années")}}
         
             
             <br>
@@ -30,5 +36,24 @@
         </form>
 
     </div>
+
+    <script type="text/javascript">
+        $(function() {
+            $("#autocomplete").autocomplete({
+                source:function(request, response) {
+                    $.getJSON("{{url_for('autocomplete')}}",{
+                        q: request.term, // in flask, "q" will be the argument to look for using request.args
+                    }, function(data) {
+                        response(data.matching_results); // matching_results from jsonify
+                    });
+                },
+                minLength: 2,
+                select: function(event, ui) {
+                    console.log(ui.item.value); // not in your question, but might help later
+                }
+            });
+        })
+        
+        </script>
 
 {% endblock %}

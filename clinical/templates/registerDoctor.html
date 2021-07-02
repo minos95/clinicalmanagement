@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title%}
+    Patient Register
+{% endblock%}
+
+{% block content%}
+{% if form.errors!={}:%}
+<div class="alert alert-danger" role="alert" >
+    Verifie
+    {% for err in form.errors%}
+            {{err}} ,
+    {% endfor %}
+  </div>
+{% endif%}
+<div class="container-sm mt-5">
+    <div class="d-flex flex-row my-4 justify-content-center">
+            
+        <img style="max-width: 50px;" src="../static/images/Molecular DNA.gif"/>
+            <h1 class="h3 mb-3 font-weight-normal mx-2 align-self-end">Enregistrer un Medecin   </h1>
+            
+       
+    </div>
+    
+    <form method="POST" class="form-register p-5" style="background-color: rgb(241, 248, 247); ">
+        {{ form.hidden_tag() }}
+        
+        
+        
+        
+        <div class="row my-3">
+            <div class="col">
+                {{form.lastname.label()}}
+                {{form.lastname(class="form-control",placeholder="Le nom du medecin",style="text-transform: capitalize;" )}}
+            </div>
+            <div class="col">
+                {{form.firstname.label()}}
+                {{form.firstname(class="form-control",placeholder="Le prenom du medecin",style="text-transform: capitalize;" )}}
+            </div>
+        </div>
+     
+    
+
+        
+        
+        <div class="row my-3">
+            <div class="col">
+                {{form.email.label()}}
+                {{form.identity(class="form-control",placeholder="exemple@gmail.com")}}
+            </div>
+            <div class="col">
+                {{form.phone.label()}}
+                {{form.phone(class="form-control",placeholder="L'address du patient")}}
+            </div>
+            
+        </div>
+        
+
+
+ 
+        
+        {{form.speciality.label()}}
+        {{form.chiffa(class="form-control",placeholder="Specialité du medecin")}}
+       
+        <br>
+        
+        {{form.submit(class="btn  btn-block btn-primary")}}
+    </form>
+
+</div>
+
+{% endblock %}
