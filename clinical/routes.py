@@ -15,6 +15,7 @@ from sqlalchemy import or_,desc ,extract,and_ ,func
 @app.route('/index',methods=['GET','POST'])
 def index():
     form=LoginsForm()
+    error=""
     if form.validate_on_submit():
         attempted_user=Admin.query.filter(Admin.username==form.username.data).first()
         print(attempted_user)
@@ -28,11 +29,12 @@ def index():
             return redirect(url_for('dashboard_page'))
         else:
             flash("le nom de l'utilisateur ou le mot de passe est incorect",category="danger")
+            error="le nom de l'utilisateur ou le mot de passe est incorect"
     if form.errors!={}:
         for err_msg in form.errors.values():
 
             flash("il y\'as une erreur:{}".format(err_msg),category='danger')
-    return render_template('index.html',form=form , nonavbar="")
+    return render_template('index.html',form=form , nonavbar="",error=error)
 
 
 @app.route('/dashboard')
@@ -129,7 +131,7 @@ def register_surgery():
     id=request.args.get("patient")
 
     if form.validate_on_submit():
-        surgery_to_create=Surgery(name=form.name.data,
+        surgery_to_create=Surgery(name=form.surgery_title.data,
                                 doctor=form.doctor.data,
                                 anesthesist=form.anesthesist.data,
                                 date=form.date.data,
@@ -154,7 +156,7 @@ def register_checkup():
         if form.file.data.filename is not None :
             filename = secure_filename(form.file.data.filename)
             form.file.data.save('clinical/static/uploads/' + filename)
-            checkup_to_create=Checkup(name=form.name.data,
+            checkup_to_create=Checkup(name=form.checkup_title.data,
                                     path=filename,
                                     patient=id)
            

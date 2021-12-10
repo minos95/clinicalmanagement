@@ -17,7 +17,7 @@ class RegisterForm(FlaskForm):
     
 
 class SurgeryForm(FlaskForm):
-    name=StringField(label='Type dintervention', validators=[Length(min=2,max=30),DataRequired()])
+    surgery_title=StringField(label='Type dintervention', validators=[Length(min=2,max=30),DataRequired()])
     doctor=StringField(label='Operateur', validators=[Length(min=2,max=30), DataRequired()])
     anesthesist=StringField(label='Anesthesist', validators=[Length(min=2,max=30), DataRequired()])
     date = DateField("La date de l'intervention", format='%Y-%m-%d')
@@ -25,8 +25,8 @@ class SurgeryForm(FlaskForm):
     
 
 class CheckupForm(FlaskForm):
-    name=StringField(label='Type de bilan', validators=[Length(min=2,max=30),DataRequired()])
-    file = FileField(label='file')
+    checkup_title=StringField(label='Type de bilan', validators=[Length(min=2,max=30),DataRequired()])
+    file = FileField(label='file',validators=[DataRequired()])
     
 
     submit=SubmitField(label='Enregistrer')
