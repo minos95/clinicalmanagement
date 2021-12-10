@@ -1,5 +1,5 @@
 # Software designed for clinical to manage and organise their services
-screenshot
+![screenshot](./scsclinical.png)
 
 ## Build with
 - Flask/jinja
