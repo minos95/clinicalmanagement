@@ -1,6 +1,12 @@
 # Software designed for clinical to manage and organise their services
 ![screenshot](./scsclinical.jpg)
 
+## Login Page
+![screenshot](./index.png)
+
+## Patients list
+![screenshot](./patientslist.png)
+
 ## Build with
 - Flask/jinja
 - Python
